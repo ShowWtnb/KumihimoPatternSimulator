@@ -1,23 +1,33 @@
 import logo from './logo.svg';
 import './App.css';
-
+import { useEffect, useState } from 'react';
+import ColorPickButton from './components/elements/ColorPickButton/ColorPickButton';
+import PatternSelector, { pattern_types } from './app/PatternSelector/PatternSelector';
+import PatternDrawer from './app/PatternDrawer/PatternDrawer';
 function App() {
+  const [colors, setColor] = useState("#aabbcc");
+  const [pattern, setPattern] = useState('');
+  const selectedColorChanged = (event) => {
+    console.log("selectedColorChanged ", event);
+    setColor(event);
+  }
+  const selectedPatternChanged = (event) => {
+    console.log("selectedPatternChanged ", event);
+    setPattern(event);
+  }
+  useEffect(() => {
+    setPattern(pattern_types.at(0).name);
+  }, [/* 任意の変数 */]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+      {/* <ColorPickDialog onSelectedColorChanged={selectedColorChanged} /> */}
+      {/* <ColorPickButton onSelectedColorChanged={selectedColorChanged} /> */}
+
+      <PatternSelector onSelectedPatternChanged={selectedPatternChanged} />
+
+      <PatternDrawer selectedPattern={pattern} />
     </div>
   );
 }
