@@ -1,16 +1,17 @@
 {
   "files": {
     "main.css": "/ReactPagesTest/static/css/main.073c9b0a.css",
-    "main.js": "/ReactPagesTest/static/js/main.5d211bd7.js",
+    "main.js": "/ReactPagesTest/static/js/main.ce7dbf61.js",
     "static/js/787.3ac5feed.chunk.js": "/ReactPagesTest/static/js/787.3ac5feed.chunk.js",
+    "static/media/naragumi_img5.jpg": "/ReactPagesTest/static/media/naragumi_img5.5c0bf349c43107f922fc.jpg",
     "static/media/logo.svg": "/ReactPagesTest/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/ReactPagesTest/index.html",
     "main.073c9b0a.css.map": "/ReactPagesTest/static/css/main.073c9b0a.css.map",
-    "main.5d211bd7.js.map": "/ReactPagesTest/static/js/main.5d211bd7.js.map",
+    "main.ce7dbf61.js.map": "/ReactPagesTest/static/js/main.ce7dbf61.js.map",
     "787.3ac5feed.chunk.js.map": "/ReactPagesTest/static/js/787.3ac5feed.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.5d211bd7.js"
+    "static/js/main.ce7dbf61.js"
   ]
 }
