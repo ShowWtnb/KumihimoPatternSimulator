@@ -1,6 +1,6 @@
 {
   "name": "hello-world-app",
-  "homepage": "https://ShowWtnb.github.io/ReactPagesTest/",
+  "homepage": "https://ShowWtnb.github.io/KumihimoPatternSimulator/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -25,9 +25,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "rm": "del docs",
+    "rm": "del docs /Q",
     "mv": "move build docs",
-    "git": "git add . && git commit -m \"First Release\" && git push origin master",
+    "git": "git add . && git commit -m \"Edit Project Name\" && git push origin master",
     "deploy": "npm run rm && npm run build && npm run mv && npm run git"
   },
   "eslintConfig": {
