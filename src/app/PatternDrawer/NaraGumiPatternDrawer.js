@@ -1,7 +1,8 @@
 import { Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ColorPickButton from "../../components/elements/ColorPickButton/ColorPickButton";
-import { Spacer } from "../../components/elements/ColorPickButton/Spacer";
+import ColorSelectors from "../../components/elements/ColorsSelector/ColorsSelector";
+import { Spacer } from "../../components/elements/Spacer";
 // import { Rectangle, Circle, Ellipse, Line, Polyline, CornerBox, Triangle } from 'react-shapes';
 import dummy from "../../naragumi_img5.jpg"
 
@@ -37,18 +38,56 @@ const color_index_convertor = [
     8, 16, 7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9
 ];
 
+const keyDEFAULT_COLORSET_NARAGUMI = 'DEFAULT_COLORSET_NARAGUMI';
+const keyIS_DEFAULT_COLORSET_NARAGUMI = 'IS_DEFAULT_COLORSET_NARAGUMI';
+
+const SaveDefaultColorSet = (ColorSet) => {
+    console.log('SaveDefaultColorSet', ColorSet);
+    localStorage.setItem(keyDEFAULT_COLORSET_NARAGUMI, ColorSet);
+    console.log('SaveDefaultColorSet', localStorage.getItem(keyDEFAULT_COLORSET_NARAGUMI).split(','));
+}
+
 export default function NaraGumiPatternDrawer() {
-    const [colors, setColors] = useState(init_colors);
+    const [colors, setColors] = useState();
     const [flag, setFlag] = useState(-1);
 
+    // 初回だけ
+    useEffect(() => {
+        var initFlag = localStorage.getItem(keyIS_DEFAULT_COLORSET_NARAGUMI);
+        console.log('IS_DEFAULT_COLORSET_NARAGUMI initFlag', initFlag);
+        // 既定の色の組み合わせが保存されていなければ
+        if (!initFlag) {
+            console.log('initFlag || initFlag === null', initFlag);
+            // init_colorsを既定の色の組み合わせとして保存して
+            SaveDefaultColorSet(init_colors);
+
+            // 既定の色の組み合わせが保存されていることにする
+            localStorage.setItem(keyIS_DEFAULT_COLORSET_NARAGUMI, true);
+        } else {
+            // 既定の色の組み合わせが保存されている場合
+            console.log('seikou');
+            // 読み込んで
+            var defaultColors = localStorage.getItem(keyDEFAULT_COLORSET_NARAGUMI);
+            var defaultColorsArray = defaultColors.split(',');
+            console.log('DEFAULT_COLORSET_NARAGUMI defaultColors', defaultColorsArray);
+            // 設定する
+            setColors([...defaultColorsArray]);
+        }
+        setFlag(flag + 1);
+    }, []);
+
     const selectedColorChanged = (event) => {
-        // console.log("NaraGumiPatternDrawer selectedColorChanged ", event);
-        //   setColor(event);
-        var tmpColors = colors;
-        tmpColors[event.id] = event.color;
-        // console.log("NaraGumiPatternDrawer selectedColorChanged ", tmpColors);
-        setColors(tmpColors);
-        // console.log("NaraGumiPatternDrawer selectedColorChanged ", colors);
+        console.log('selectedColorChanged', event);
+        // // console.log("NaraGumiPatternDrawer selectedColorChanged ", event);
+        // //   setColor(event);
+        // var tmpColors = colors;
+        // tmpColors[event.id] = event.color;
+        // // console.log("NaraGumiPatternDrawer selectedColorChanged ", tmpColors);
+        // setColors(tmpColors);
+        // // console.log("NaraGumiPatternDrawer selectedColorChanged ", colors);
+        setColors(event);
+        SaveDefaultColorSet(event);
+
         setFlag(flag + 1);
     }
 
@@ -71,9 +110,9 @@ export default function NaraGumiPatternDrawer() {
                     // console.log('pointsSet.map', pointSetStr);
                     array.push(pointSetStr);
                 });
-
             }
             // console.log('GetPattern', array);
+            // testFIFO();
             setRect(array);
         }, [flag, colors]);
 
@@ -87,16 +126,24 @@ export default function NaraGumiPatternDrawer() {
             </div>
         );
     }
-
-    useEffect(() => {
-        setFlag(flag + 1);
-    }, []);
-
-    var i = 0;
+    const GetColorSelectors = () => {
+        var [tmpC, setTmpC] = useState();
+        var array = [];
+        useEffect(() => {
+            if (colors) {
+                array = [...colors];
+            } else {
+                array = undefined;
+            }
+            setTmpC(array);
+        }, [flag, colors]);
+        console.log('tmpC', tmpC);
+        return (tmpC) ? (
+            <ColorSelectors initColors={tmpC ? tmpC : init_colors} selectedColorsChanged={selectedColorChanged} />
+        ) : (<div />)
+    }
     return (
         <div>
-            {/* <h1>Nara Gumi</h1> */}
-
             <Grid container>
                 <Grid container item xs={6}>
                     <Grid item xs={12}>
@@ -139,22 +186,7 @@ export default function NaraGumiPatternDrawer() {
 
                 </Grid>
                 <Grid item xs={6}>
-                    {
-                        colors.map((color) => (
-                            // GetColorPicker(color)
-                            <Grid container item xs={6}>
-                                <Grid item xs={2} />
-                                <Grid item xs={3}>
-                                    <Typography fontSize={'2em'}>{i + 1}</Typography>
-                                </Grid>
-                                <Grid item xs={2} />
-                                <Grid item xs={3}>
-                                    <ColorPickButton initColor={color} onSelectedColorChanged={selectedColorChanged} id={i++} />
-                                </Grid>
-                                <Grid item xs={2} />
-                            </Grid>
-                        ))
-                    }
+                    {GetColorSelectors()}
                 </Grid>
             </Grid>
         </div>

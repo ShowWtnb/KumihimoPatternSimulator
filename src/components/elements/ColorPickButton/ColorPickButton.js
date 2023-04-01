@@ -2,9 +2,9 @@ import { HexColorPicker } from "react-colorful";
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
-import { TextField, Select } from '@mui/material';
+import { TextField, Select, Stack, Button, Grid } from '@mui/material';
 
-const ColorPickButton = ({ onSelectedColorChanged, initColor, id }) => {
+const ColorPickButton = ({ onSelectedColorChanged, initColor, id, recentColors }) => {
     // const [open, setOpen] = useState(false);
 
     // // ダイアログを開く
@@ -83,6 +83,13 @@ const ColorPickButton = ({ onSelectedColorChanged, initColor, id }) => {
         // console.log("onSelectOpen", color, event);
         // setColorStr(color);
     }
+    function onRecentColorSelected(event) {
+        // console.log("onRecentColorSelected event", event);
+        // console.log("onRecentColorSelected event.target.id", event.target.id);
+        var c = event.target.id
+        setColorStr(c);
+        setColor(c);
+    }
     return (
         <div >
             <Select
@@ -106,6 +113,49 @@ const ColorPickButton = ({ onSelectedColorChanged, initColor, id }) => {
                         <HexColorPicker color={color} onChange={onHexColorPickerChange} />
                     </FormControl>
                 </Box>
+                {
+                    (recentColors) ? (
+                        <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                            <FormControl sx={{ m: 1, minWidth: '5em' }}>
+                                <Stack
+                                    spacing={{ xs: 0.1, sm: 2, md: 4 }}
+                                    direction="row"
+                                    useFlexGap
+                                    flexWrap="wrap"
+                                    sx={{ width: 200, '& > *': { flexGrow: 1 } }}
+                                >
+                                    {
+                                        recentColors.map((color) => (
+                                            <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }} >
+                                                <FormControl sx={{ m: 0, minWidth: '1em' }}>
+                                                    <Button id={color} onClick={onRecentColorSelected}
+                                                        sx={{
+                                                            bgcolor: color,
+                                                            width: '0.5em',
+                                                            height: '2em',
+                                                            color: 'transparent',
+                                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                                borderColor: color,
+                                                                bgcolor: color,
+                                                            },
+                                                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                                borderColor: color,
+                                                                bgcolor: color,
+                                                            },
+                                                            '.MuiSvgIcon-root ': {
+                                                                fill: "transparent",
+                                                            }
+                                                        }}>
+                                                    </Button>
+                                                </FormControl>
+                                            </Box>
+                                        ))
+                                    }
+                                </Stack>
+                            </FormControl>
+                        </Box>
+                    ) : (<div />)/* not have recentColors */
+                }
                 <TextField label='#RRGGBB' defaultValue={colorStr} value={color} onChange={onTextFieldChange}></TextField>
             </Select>
         </div>
