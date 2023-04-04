@@ -1,27 +1,38 @@
-
+/// FIFO Que
 export default class FifoQueue /* extends [] */ {
     constructor(props) {
         // super();
         this.state = {
             array: [],
             max: props.max,
-            isRepeatable: props.isRepeatable ?? false
+            isRepeatable: props.isRepeatable ?? false   // 重複を許可するか（DEFAULTは許可しない）
         };
         // return this.state.array;
     }
     push(value) {
-        if (!this.state.isRepeatable) {
-            if (this.state.array.indexOf(value) !== -1) {
-                // console.log('FifoQueue Repeated');
+        // 重複を許可している場合
+        if (this.state.isRepeatable) {
+            // なにもしなくていい
+        } else {
+            // 重複を許可しない場合
+            // かぶっているものがなければ
+            if (this.state.array.indexOf(value) === -1) {
+                // かぶっているものがなければ何もしなくていい
+            } else {
+                // かぶっているものがある場合
+                // 配列に追加しなくてよいので何もせずに抜ける
                 return;
             }
         }
+        // 現在の配列に要素を追加する
         this.state.array.push(value);
+        // 最大の長さを超えていた場合
         if (this.state.array.length > this.state.max) {
-            // console.log('FifoQueue push', this.state.array.length, this.state.max);
+            // ひとつ目の要素を削除する
             this.state.array = this.state.array.slice(1);
             // console.log('FifoQueue push', this.state.array);
         }
+        return;
     }
     get() {
         return this.state.array;

@@ -5,47 +5,28 @@ import FormControl from '@mui/material/FormControl';
 import { TextField, Select, Stack, Button, Grid } from '@mui/material';
 
 const ColorPickButton = ({ onSelectedColorChanged, initColor, id, recentColors }) => {
-    // const [open, setOpen] = useState(false);
+    const [color, setColor] = useState("#aabbcc");
 
-    // // ダイアログを開く
-    // const handleClickOpen = () => {
-    //     // キャンセル用に現在の色を保存しておく
-    //     setPreColor(color);
-    //     setColorStr(color);
-    //     setOpen(true);
-    // };
-
-    // // ダイアログが閉じられ用とするときのイベント
-    // const handleClose = (event, reason) => {
-    //     // console.log(event, reason);
-    //     if (reason !== 'backdropClick') {
-    //         setOpen(false);
-    //     } else {
-    //         // console.log("backdropClick", event);
-    //         // ダイアログ外がクリックされた場合
-    //         handleCancel(event, reason);
-    //     }
-    // };
-    // // キャンセルボタンが押された
-    // const handleCancel = (event, reason) => {
-    //     // キャンセルされたら元の色に戻す
-    //     setColorStr(preColor);
-    //     setColor(preColor);
-    //     // 閉じる
-    //     setOpen(false);
-    // };
     // OKボタンが押された
-    const handleOk = (event, reason) => {
-        // 色が変更されたイベントを返す
-        onSelectedColorChanged({ color, id });
+    const onSelectClosed = (event, reason) => {
+        // setColor -> onClosedの間には描画の更新が行われていないので、ここでcolorを返しても前の色になってしまう
+        console.log("onSelectClosed", event, reason);
+        console.log("onSelectClosed", { color, id });
+
+        // buttonが押されて閉じたときはsetColorが間に合わない
+        if (event.target.localName === 'button') {
+            console.log("event.target.localName === 'button'", { color, id });
+        } else {
+            // それ以外の時は都度描画変更すると重すぎるので閉じられたときに変更する
+            console.log("else", { color, id });
+            // 色が変更されたイベントを返す
+            onSelectedColorChanged({ color, id });
+        }
         // // 閉じる
         // setOpen(false);
     };
 
-    const [color, setColor] = useState("#aabbcc");
-    const [colorStr, setColorStr] = useState("#aabbcc");
-    // const [preColor, setPreColor] = useState("#aabbcc");
-
+    // 初回だけ実行する
     useEffect(() => {
         // console.log('useEffect', initColor);
         if (initColor) {
@@ -58,37 +39,26 @@ const ColorPickButton = ({ onSelectedColorChanged, initColor, id, recentColors }
 
     function onTextFieldChange(event) {
         var str = event.target.value;
-        // console.log("onTextFieldChange", str);
-        setColorStr(str);
         // textの入力が色のフォーマット#XXXXXXならsetColorしたい
-        const abcPattern = /^#[0-9a-f]{6}/gi;
-        const matched = str.match(abcPattern);
-        if (matched) {
-            // console.log("matched", str);
-            setColorStr(str);
+        const abcPattern = /^#[0-9a-f]{6}/gi;   // フォーマットと文字数を指定（#から始まって、0-9a-fで構成され、6文字で、大文字小文字は区別しない）
+        if (str.match(abcPattern)) {
             setColor(str);
-            // handleOk();
         } else {
             // console.log("not matched", str);
         }
     }
     function onHexColorPickerChange(event) {
-        // setColor(event);
-        // onSelectedColorChanged(event);
-        setColorStr(event);
+        console.log("onHexColorPickerChange", event);
         setColor(event);
-        // handleOk();
-    }
-    function onSelectOpen(event) {
-        // console.log("onSelectOpen", color, event);
-        // setColorStr(color);
     }
     function onRecentColorSelected(event) {
-        // console.log("onRecentColorSelected event", event);
-        // console.log("onRecentColorSelected event.target.id", event.target.id);
         var c = event.target.id
-        setColorStr(c);
+        console.log("onRecentColorSelected event.target.id", c);
+        // setColorStr(c);
         setColor(c);
+
+        // 色が変更されたイベントを返す
+        onSelectedColorChanged({ color: c, id: id });
     }
     return (
         <div >
@@ -105,8 +75,7 @@ const ColorPickButton = ({ onSelectedColorChanged, initColor, id, recentColors }
                         fill: "transparent",
                     }
                 }}
-                onOpen={onSelectOpen}
-                onClose={handleOk}
+                onClose={onSelectClosed}
             >
                 <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
                     <FormControl sx={{ m: 1, minWidth: '5em' }}>
@@ -125,8 +94,8 @@ const ColorPickButton = ({ onSelectedColorChanged, initColor, id, recentColors }
                                     sx={{ width: 200, '& > *': { flexGrow: 1 } }}
                                 >
                                     {
-                                        recentColors.map((color) => (
-                                            <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }} >
+                                        recentColors.map((color, i = 0) => (
+                                            <Box key={i++} component="form" sx={{ display: 'flex', flexWrap: 'wrap' }} >
                                                 <FormControl sx={{ m: 0, minWidth: '1em' }}>
                                                     <Button id={color} onClick={onRecentColorSelected}
                                                         sx={{
@@ -156,7 +125,7 @@ const ColorPickButton = ({ onSelectedColorChanged, initColor, id, recentColors }
                         </Box>
                     ) : (<div />)/* not have recentColors */
                 }
-                <TextField label='#RRGGBB' defaultValue={colorStr} value={color} onChange={onTextFieldChange}></TextField>
+                <TextField label='#RRGGBB' defaultValue={color} value={color} onChange={onTextFieldChange}></TextField>
             </Select>
         </div>
     );

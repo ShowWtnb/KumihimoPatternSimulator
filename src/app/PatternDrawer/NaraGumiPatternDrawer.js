@@ -39,7 +39,7 @@ const color_index_convertor = [
 ];
 
 const keyDEFAULT_COLORSET_NARAGUMI = 'DEFAULT_COLORSET_NARAGUMI';
-const keyIS_DEFAULT_COLORSET_NARAGUMI = 'IS_DEFAULT_COLORSET_NARAGUMI';
+// const keyIS_DEFAULT_COLORSET_NARAGUMI = 'IS_DEFAULT_COLORSET_NARAGUMI';
 
 const SaveDefaultColorSet = (ColorSet) => {
     console.log('SaveDefaultColorSet', ColorSet);
@@ -48,47 +48,32 @@ const SaveDefaultColorSet = (ColorSet) => {
 }
 
 export default function NaraGumiPatternDrawer() {
-    const [colors, setColors] = useState();
+    const [colors, setColors] = useState(init_colors);
     const [flag, setFlag] = useState(-1);
 
     // 初回だけ
     useEffect(() => {
-        var initFlag = localStorage.getItem(keyIS_DEFAULT_COLORSET_NARAGUMI);
-        console.log('IS_DEFAULT_COLORSET_NARAGUMI initFlag', initFlag);
-        // 既定の色の組み合わせが保存されていなければ
-        if (!initFlag) {
-            console.log('initFlag || initFlag === null', initFlag);
-            // init_colorsを既定の色の組み合わせとして保存して
-            SaveDefaultColorSet(init_colors);
-
-            // 既定の色の組み合わせが保存されていることにする
-            localStorage.setItem(keyIS_DEFAULT_COLORSET_NARAGUMI, true);
-        } else {
-            // 既定の色の組み合わせが保存されている場合
-            console.log('seikou');
-            // 読み込んで
-            var defaultColors = localStorage.getItem(keyDEFAULT_COLORSET_NARAGUMI);
-            var defaultColorsArray = defaultColors.split(',');
-            console.log('DEFAULT_COLORSET_NARAGUMI defaultColors', defaultColorsArray);
-            // 設定する
-            setColors([...defaultColorsArray]);
+        var defaultColorsArray = init_colors;
+        // local storageから既定の色の組み合わせを取得する
+        var defaultColors = localStorage.getItem(keyDEFAULT_COLORSET_NARAGUMI);
+        // 値が保存されていたら読み込んでdefaultColorsArrayに設定する
+        if (!(defaultColors === null || defaultColors === undefined)) {
+            defaultColorsArray = defaultColors.split(',');
         }
-        setFlag(flag + 1);
+        console.log('NaraGumiPatternDrawer DEFAULT_COLORSET_NARAGUMI defaultColors', defaultColorsArray);
+
+        // 色の更新
+        setColors([...defaultColorsArray]);
     }, []);
 
+    // ColorSelectorsで色の選択が変更されたとき
     const selectedColorChanged = (event) => {
-        console.log('selectedColorChanged', event);
-        // // console.log("NaraGumiPatternDrawer selectedColorChanged ", event);
-        // //   setColor(event);
-        // var tmpColors = colors;
-        // tmpColors[event.id] = event.color;
-        // // console.log("NaraGumiPatternDrawer selectedColorChanged ", tmpColors);
-        // setColors(tmpColors);
-        // // console.log("NaraGumiPatternDrawer selectedColorChanged ", colors);
-        setColors(event);
-        SaveDefaultColorSet(event);
+        console.log('NaraGumiPatternDrawer selectedColorChanged', event);
 
-        setFlag(flag + 1);
+        SaveDefaultColorSet(event);
+        setColors([...event]);
+
+        // setFlag(flag + 1);
     }
 
     const GetPattern = (colors) => {
@@ -120,13 +105,14 @@ export default function NaraGumiPatternDrawer() {
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0 0 36 100">
                     {rects.map((rect, i = 0) => (
-                        <polygon points={rect} stroke="#eeeeee" strokeWidth={0.1} fill={colors[color_index_convertor[i++] - 1]} />
+                        <polygon key={i} points={rect} stroke="#eeeeee" strokeWidth={0.1} fill={colors[color_index_convertor[i++] - 1]} />
                     ))}
                 </svg>
             </div>
         );
     }
-    const GetColorSelectors = () => {
+
+    const GetColorSelectors = (tmpC) => {
         var [tmpC, setTmpC] = useState();
         var array = [];
         useEffect(() => {
@@ -150,30 +136,70 @@ export default function NaraGumiPatternDrawer() {
                         <div>
                             <Grid container >
                                 <Grid item xs={2}>
-                                    <Spacer size={'3em'} />
-                                    <Typography fontSize={'1.5em'} right={0} >8</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >7</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >6</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >5</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >4</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >3</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >2</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >1</Typography>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <Spacer size={'3em'} />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >8</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >7</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >6</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >5</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >4</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >3</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >2</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >1</Typography>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
 
                                 <Grid item xs={8} >
                                     {GetPattern(colors)}
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <Spacer size={'4.5em'} />
-                                    <Typography fontSize={'1.5em'} right={0} >16</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >15</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >14</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >13</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >12</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >11</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >10</Typography>
-                                    <Typography fontSize={'1.5em'} right={0} >9</Typography>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <Spacer size={'4.5em'} />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >16</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >15</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >14</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >13</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >12</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >11</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >10</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography fontSize={'1.5em'} right={0} >9</Typography>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </div>
@@ -181,12 +207,10 @@ export default function NaraGumiPatternDrawer() {
                             <img src={dummy} width={'200rem'} height={'200rem'} />
                         </div>
                     </Grid>
-
-
-
                 </Grid>
                 <Grid item xs={6}>
-                    {GetColorSelectors()}
+                    {/* {GetColorSelectors(colors)} */}
+                    <ColorSelectors initColors={colors} selectedColorsChanged={selectedColorChanged} />
                 </Grid>
             </Grid>
         </div>

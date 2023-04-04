@@ -27,7 +27,7 @@
     "eject": "react-scripts eject",
     "rm": "del docs /Q",
     "mv": "move build docs",
-    "cpy": "xcopy build docs",
+    "cpy": "mkdir docs && xcopy build docs",
     "git": "git add . && git commit -m \"Edit Project Name\" && git push origin master",
     "_pre_deploy": "npm run rm && npm run build && npm run cpy && npm run git",
     "deploy": "npm run rm && npm run build && npm run cpy"
