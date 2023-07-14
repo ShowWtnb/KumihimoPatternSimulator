@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import ColorPickButton from "../../components/elements/ColorPickButton/ColorPickButton";
+// import ColorPickButton from "../../components/elements/ColorPickButton/ColorPickButton";
 import ColorSelectors from "../../components/elements/ColorsSelector/ColorsSelector";
 import { Spacer } from "../../components/elements/Spacer";
 // import { Rectangle, Circle, Ellipse, Line, Polyline, CornerBox, Triangle } from 'react-shapes';
@@ -49,7 +49,7 @@ const SaveDefaultColorSet = (ColorSet) => {
 
 export default function NaraGumiPatternDrawer() {
     const [colors, setColors] = useState(init_colors);
-    const [flag, setFlag] = useState(-1);
+    // const [flag, setFlag] = useState(-1);
 
     // 初回だけ
     useEffect(() => {
@@ -99,11 +99,11 @@ export default function NaraGumiPatternDrawer() {
             // console.log('GetPattern', array);
             // testFIFO();
             setRect(array);
-        }, [flag, colors]);
+        }, [colors]);
 
         return (
             <div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0 0 36 100">
+                <svg xmlns="http://www.w3.org/2000/svg" height={'22em'} viewBox="-0 0 36 100">
                     {rects.map((rect, i = 0) => (
                         <polygon key={i} points={rect} stroke="#eeeeee" strokeWidth={0.1} fill={colors[color_index_convertor[i++] - 1]} />
                     ))}
@@ -112,100 +112,97 @@ export default function NaraGumiPatternDrawer() {
         );
     }
 
-    const GetColorSelectors = (tmpC) => {
-        var [tmpC, setTmpC] = useState();
-        var array = [];
-        useEffect(() => {
-            if (colors) {
-                array = [...colors];
-            } else {
-                array = undefined;
-            }
-            setTmpC(array);
-        }, [flag, colors]);
-        console.log('tmpC', tmpC);
-        return (tmpC) ? (
-            <ColorSelectors initColors={tmpC ? tmpC : init_colors} selectedColorsChanged={selectedColorChanged} />
-        ) : (<div />)
-    }
+    // const GetColorSelectors = (tmpC) => {
+    //     var [tmpC, setTmpC] = useState();
+    //     var array = [];
+    //     useEffect(() => {
+    //         if (colors) {
+    //             array = [...colors];
+    //         } else {
+    //             array = undefined;
+    //         }
+    //         setTmpC(array);
+    //     }, [flag, colors]);
+    //     console.log('tmpC', tmpC);
+    //     return (tmpC) ? (
+    //         <ColorSelectors initColors={tmpC ? tmpC : init_colors} selectedColorsChanged={selectedColorChanged} />
+    //     ) : (<div />)
+    // }
     return (
         <div>
             <Grid container>
                 <Grid container item xs={6}>
                     <Grid item xs={12}>
-                        <div>
-                            <Grid container >
-                                <Grid item xs={2}>
-                                    <Grid container>
-                                        <Grid item xs={12}>
-                                            <Spacer size={'3em'} />
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >8</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >7</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >6</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >5</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >4</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >3</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >2</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >1</Typography>
-                                        </Grid>
+                        <Grid container >
+                            <Grid item xs={2}>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Spacer size={'3em'} />
                                     </Grid>
-                                </Grid>
-
-                                <Grid item xs={8} >
-                                    {GetPattern(colors)}
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <Grid container>
-                                        <Grid item xs={12}>
-                                            <Spacer size={'4.5em'} />
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >16</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >15</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >14</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >13</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >12</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >11</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >10</Typography>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography fontSize={'1.5em'} right={0} >9</Typography>
-                                        </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >8</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >7</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >6</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >5</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >4</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >3</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >2</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >1</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
-                        </div>
-                        <div>
+                            <Grid item xs={8} height={'30em'}>
+                                {GetPattern(colors)}
+                            </Grid>
+                            <Grid item xs={2}>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Spacer size={'4.5em'} />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >16</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >15</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >14</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >13</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >12</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >11</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >10</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography fontSize={'1.5em'} right={0} >9</Typography>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container >
                             <img src={dummy} width={'200rem'} height={'200rem'} />
-                        </div>
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Grid item xs={6}>

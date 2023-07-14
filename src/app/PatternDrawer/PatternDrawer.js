@@ -1,4 +1,5 @@
 import NaraGumiPatternDrawer from "./NaraGumiPatternDrawer";
+import UniversalPatternDrawer from "./UniversalPatternDrawer";
 
 function GetPattern(pattern) {
     console.log('GetPattern', pattern)
@@ -19,6 +20,7 @@ export default function PatternDrawer({ selectedPattern }) {
     return (
         <div>
             {GetPattern(selectedPattern)}
+            {/* <UniversalPatternDrawer /> */}
         </div>
     );
 }

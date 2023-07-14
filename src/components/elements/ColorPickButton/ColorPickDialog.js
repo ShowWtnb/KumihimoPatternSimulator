@@ -1,6 +1,6 @@
 import { HexColorPicker } from "react-colorful";
 import { useState } from 'react';
-import { TextField, Select } from '@mui/material';
+import { TextField, Select, Stack } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -8,9 +8,23 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
+import { useEffect } from "react";
 
-const ColorPickDialog = ({ onSelectedColorChanged }) => {
+const ColorPickDialog = ({ isOpen, defaultColor, onSelectedColorChanged }) => {
     const [open, setOpen] = useState(false);
+    const [color, setColor] = useState("#aabbcc");
+    const [colorStr, setColorStr] = useState("#aabbcc");
+    const [preColor, setPreColor] = useState("#aabbcc");
+    const [recentColors, setRecentColors] = useState([]);
+    const [recentColorsMax, setRecentColorsMax] = useState(9);
+
+    useEffect(() => {
+        setOpen(isOpen);
+    }, [isOpen])
+    useEffect(() => {
+        console.log('ColorPickDialog', defaultColor);
+        setColor(defaultColor);
+    }, [defaultColor])
 
     // ダイアログを開く
     const handleClickOpen = () => {
@@ -38,18 +52,22 @@ const ColorPickDialog = ({ onSelectedColorChanged }) => {
         setColor(preColor);
         // 閉じる
         setOpen(false);
+        onSelectedColorChanged({ 'canceled': true });
     };
     // OKボタンが押された
     const handleOk = (event, reason) => {
         // 色が変更されたイベントを返す
-        onSelectedColorChanged(color);
+        onSelectedColorChanged({ 'canceled': false, 'selected': color });
+        if (!recentColors.includes(color)) {
+            setRecentColors([color, ...recentColors]);
+            if (recentColors.length > recentColorsMax) {
+                setRecentColors(recentColors.slice(0, recentColorsMax));
+            }
+        }
         // 閉じる
         setOpen(false);
     };
 
-    const [color, setColor] = useState("#aabbcc");
-    const [colorStr, setColorStr] = useState("#aabbcc");
-    const [preColor, setPreColor] = useState("#aabbcc");
     function onTextFieldChange(event) {
         var str = event.target.value;
         // console.log("onTextFieldChange", str);
@@ -71,26 +89,17 @@ const ColorPickDialog = ({ onSelectedColorChanged }) => {
         setColorStr(event);
         setColor(event);
     }
+    function onRecentColorSelected(event) {
+        var c = event.target.id
+        console.log("onRecentColorSelected event.target.id", c);
+        // setColorStr(c);
+        setColor(c);
+
+        // 色が変更されたイベントを返す
+        // onSelectedColorChanged({ color: c, id: id });
+    }
     return (
         <div >
-            <Button onClick={handleClickOpen}
-                sx={{
-                    bgcolor: color,
-                    width: '5rem',
-                    height: '5rem',
-                    color: 'transparent',
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: color,
-                        bgcolor: color,
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: color,
-                        bgcolor: color,
-                    },
-                    '.MuiSvgIcon-root ': {
-                        fill: "transparent",
-                    }
-                }}></Button>
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                 <DialogTitle>Select Color</DialogTitle>
                 <DialogContent>
@@ -99,6 +108,50 @@ const ColorPickDialog = ({ onSelectedColorChanged }) => {
                             <HexColorPicker color={color} onChange={onHexColorPickerChange} />
                         </FormControl>
                     </Box>
+
+                    {
+                        (recentColors) ? (
+                            <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                <FormControl sx={{ m: 1, minWidth: '5em' }}>
+                                    <Stack
+                                        spacing={{ xs: 0.1, sm: 2, md: 4 }}
+                                        direction="row"
+                                        useFlexGap
+                                        flexWrap="wrap"
+                                        sx={{ width: 200, '& > *': { flexGrow: 1 } }}
+                                    >
+                                        {
+                                            recentColors.map((color, i = 0) => (
+                                                <Box key={i++} component="form" sx={{ display: 'flex', flexWrap: 'wrap' }} >
+                                                    <FormControl sx={{ m: 0, minWidth: '1em' }}>
+                                                        <Button id={color} onClick={onRecentColorSelected}
+                                                            sx={{
+                                                                bgcolor: color,
+                                                                width: '0.5em',
+                                                                height: '2em',
+                                                                color: 'transparent',
+                                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                                    borderColor: color,
+                                                                    bgcolor: color,
+                                                                },
+                                                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                                    borderColor: color,
+                                                                    bgcolor: color,
+                                                                },
+                                                                '.MuiSvgIcon-root ': {
+                                                                    fill: "transparent",
+                                                                }
+                                                            }}>
+                                                        </Button>
+                                                    </FormControl>
+                                                </Box>
+                                            ))
+                                        }
+                                    </Stack>
+                                </FormControl>
+                            </Box>
+                        ) : (<div />)/* not have recentColors */
+                    }
                     <TextField label='#RRGGBB' value={colorStr} onChange={onTextFieldChange}></TextField>
                 </DialogContent>
                 <DialogActions>
