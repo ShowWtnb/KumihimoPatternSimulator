@@ -608,7 +608,7 @@ const init_colors = [
 //     }
 // ];
 
-export default function UniversalPatternDrawer({ jsonPattern, onSelectedColorChanged }) {
+export default function UniversalPatternDrawer({ jsonPattern, onSelectedColorsChanged }) {
     var [winWidth, winHeight] = useWindowSize();
     const [colors, setColors] = useState(init_colors);
     const [jsonPatterns, setJsonPatterns] = useState(jsonPattern);
@@ -742,6 +742,7 @@ export default function UniversalPatternDrawer({ jsonPattern, onSelectedColorCha
                             stroke="#eeeeee"
                             strokeWidth={1.0}
                             onMouseUp={onClickRect}
+                            onTouchEnd={onClickRect}
                         />
                         <Text text={point.label} fill={selectedJson?.fontColor === undefined ? "#404040" : selectedJson?.fontColor} fontStyle="bold" x={(point.labelPosition === 'left') ? (point.points[0][0] * width_rate) : (point.points[0][0] * width_rate - fontsize * 1.1)} y={point.points[0][1] * height_rate + fontsize * 0.8} fontSize={fontsize} />
                     </>
@@ -768,8 +769,8 @@ export default function UniversalPatternDrawer({ jsonPattern, onSelectedColorCha
             }
         }
         console.log('UniversalPatternDrawer onSelectedColorChanged', copySelectedJson);
-        if (onSelectedColorChanged !== undefined) {
-            onSelectedColorChanged({ 'value': copySelectedJson });
+        if (onSelectedColorsChanged !== undefined) {
+            onSelectedColorsChanged({ 'value': copySelectedJson });
         }
         // setSelectedJson(...copySelectedJson);
     };

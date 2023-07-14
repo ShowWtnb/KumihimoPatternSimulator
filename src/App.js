@@ -209,7 +209,7 @@ function App() {
         </AppBar>
       </Box>
 
-      <UniversalPatternDrawer jsonPattern={jsonSavedPattern} onSelectedColorChanged={onSelectedColorChanged} />
+      <UniversalPatternDrawer jsonPattern={jsonSavedPattern} onSelectedColorsChanged={onSelectedColorChanged} />
       <AddJsonDialog isOpen={isOpenAddJsonDialog} onClosedDialog={onClosedAddDialog} />
       <EditJsonDialog isOpen={isOpenEditJsonDialog} onClosedDialog={onClosedEditDialog} />
     </div>
