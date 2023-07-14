@@ -111,7 +111,22 @@ function App() {
     SaveLocalStorage(keySAVED_PATTERNS, JSON.stringify(json));
     setJsonSavedPattern(json);
   }
-
+  function onSelectedColorChanged(event) {
+    if (jsonSavedPattern !== undefined) {
+      const value = event?.value
+      if (value !== undefined) {
+        for (let i = 0; i < jsonSavedPattern.length; i++) {
+          const element = jsonSavedPattern[i];
+          if (element.key === value.key) {
+            jsonSavedPattern[i] = value;
+            setJsonSavedPattern({ ...jsonSavedPattern });
+            const keySAVED_PATTERNS = 'SAVED_PATTERNS';
+            SaveLocalStorage(keySAVED_PATTERNS, JSON.stringify(jsonSavedPattern));
+          }
+        }
+      }
+    }
+  }
   return (
     <div className="App">
 
@@ -194,7 +209,7 @@ function App() {
         </AppBar>
       </Box>
 
-      <UniversalPatternDrawer jsonPattern={jsonSavedPattern} />
+      <UniversalPatternDrawer jsonPattern={jsonSavedPattern} onSelectedColorChanged={onSelectedColorChanged} />
       <AddJsonDialog isOpen={isOpenAddJsonDialog} onClosedDialog={onClosedAddDialog} />
       <EditJsonDialog isOpen={isOpenEditJsonDialog} onClosedDialog={onClosedEditDialog} />
     </div>
