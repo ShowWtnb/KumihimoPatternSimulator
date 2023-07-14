@@ -608,7 +608,7 @@ const init_colors = [
 //     }
 // ];
 
-export default function UniversalPatternDrawer({ jsonPattern }) {
+export default function UniversalPatternDrawer({ jsonPattern, onSelectedColorChanged }) {
     var [winWidth, winHeight] = useWindowSize();
     const [colors, setColors] = useState(init_colors);
     const [jsonPatterns, setJsonPatterns] = useState(jsonPattern);
@@ -768,6 +768,9 @@ export default function UniversalPatternDrawer({ jsonPattern }) {
             }
         }
         console.log('UniversalPatternDrawer onSelectedColorChanged', copySelectedJson);
+        if (onSelectedColorChanged !== undefined) {
+            onSelectedColorChanged({ 'value': copySelectedJson });
+        }
         // setSelectedJson(...copySelectedJson);
     };
 
