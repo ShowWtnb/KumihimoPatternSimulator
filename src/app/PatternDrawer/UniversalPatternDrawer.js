@@ -233,7 +233,9 @@ export default function UniversalPatternDrawer({ jsonPattern, onSelectedColorsCh
                         </Select>
                     </FormControl>
                 </Grid>
+                <Grid item xs={3}>
 
+                </Grid>
                 <Grid item xs={8}>
                     <Stage width={LayerWidth} height={LayerHeight}>
                         <Layer>
